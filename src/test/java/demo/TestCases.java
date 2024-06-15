@@ -9,11 +9,14 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
@@ -61,9 +64,11 @@ public class TestCases {
         driver.get("https://docs.google.com/forms/d/e/1FAIpQLSep9LTMntH5YqIXa5nkiPKSs283kdwitBBhXWyZdAS-e4CxBQ/viewform");
         
 
-        Thread.sleep(1000);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
 
         By nameLocator = By.xpath("//div[@class='rFrNMe k3kHxc RdH0ib yqQS1 zKHdkd']/div[1]/div[1]/div[1]/input");
+        wait.until(ExpectedConditions.presenceOfElementLocated(nameLocator));
         wrappers.sendKeys(nameLocator, "Crio Learner");
 
         By practicingAutomationLocator = By.xpath("//textarea[@class='KHxj8b tL9Q4c']");
@@ -83,11 +88,13 @@ public class TestCases {
         Thread.sleep(2000);
 
         By addressedLocator = By.xpath("//div[@class='MocG8c HZ3kWc mhLiyf LMgvRb KKjvXb DEh1R']");
-        wrappers.click(addressedLocator);
-        Thread.sleep(2000);
-        wrappers.click(By.xpath("//div[@role='option']//span[@class='vRMGwf oJeWuf'][normalize-space()='Mr']"));
+        wait.until(ExpectedConditions.elementToBeClickable(addressedLocator));
 
-        Thread.sleep(2000);
+        wrappers.click(addressedLocator);
+        By optionLocator = By.xpath("//div[@role='option']//span[@class='vRMGwf oJeWuf'][normalize-space()='Mr']");
+        wait.until(ExpectedConditions.elementToBeClickable(optionLocator));
+        wrappers.click(optionLocator);
+
 
         wrappers.scroll(0, 900);
         Thread.sleep(2000);
@@ -121,10 +128,7 @@ public class TestCases {
         driver.findElement(By.xpath("//div[@class='A6uyJd']")).click();
         Thread.sleep(2000);
 
-
-
-
-       
+     
 
         wrappers.click(By.xpath("//div[@jscontroller='OZjhxc']"));
 
@@ -145,6 +149,11 @@ public class TestCases {
 
         submitButton.click();
         Thread.sleep(2000);
+
+        By lastMessageLocator = By.xpath("//div[@class='vHW8K']");
+        wait.until(ExpectedConditions.presenceOfElementLocated(lastMessageLocator));
+        WebElement lastMessage = driver.findElement(lastMessageLocator);
+        System.out.println("Last message text: " + lastMessage.getText());
 
         System.out.println("Thanks for your response, Automation Wizard!");
         System.out.println("End Test case: testCase01");
